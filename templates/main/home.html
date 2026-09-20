@@ -1,0 +1,52 @@
+{% extends 'main/base.html' %}
+{% block title %}Home | Shop Fusion{% endblock %}
+{% block content %}
+<div class="hero-section text-center">
+    <h1 class="display-5 fw-bold mb-3">Welcome to Shop Fusion</h1>
+    <p class="lead mb-4 opacity-90">Discover quality products from trusted vendors, all in one place.</p>
+    <a href="#products" class="btn btn-light btn-lg px-4">
+        <i class="bi bi-bag me-2"></i>Browse Products
+    </a>
+</div>
+
+<section id="products">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="h4 mb-0 fw-semibold">Featured Products</h2>
+    </div>  
+
+    {% if products %}
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+        {% for product in products %}
+        <div class="col">
+            <div class="card product-card h-100 shadow-sm">
+                {% if product.image %}
+                    <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}" style="height: 180px; object-fit: cover;">
+                {% else %}
+                    <div class="bg-light d-flex align-items-center justify-content-center" style="height: 180px;">
+                        <i class="bi bi-box-seam display-4 text-muted"></i>
+                    </div>
+                {% endif %}
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title mb-2">{{ product.name }}</h5>
+                    <p class="card-text text-muted small flex-grow-1">
+                        {{ product.description|truncatewords:15 }}
+                    </p>
+                    <div class="d-flex justify-content-between align-items-center mt-2">
+                        <span class="price-tag">${{ product.price }}</span>
+                        <a href="{% url 'products:product-details' product.id %}" class="btn btn-sm btn-outline-primary">
+                            View <i class="bi bi-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-5">
+        <i class="bi bi-inbox display-1 text-muted"></i>
+        <p class="text-muted mt-3">No products available yet. Check back soon!</p>
+    </div>
+    {% endif %}
+</section>
+{% endblock %}
