@@ -1,0 +1,20 @@
+{% extends 'main/base.html' %}
+{% block title %}Orders{% endblock %}
+{% block content %}
+<h1 class="h4 mb-4">My Orders</h1>
+{% for order in orders %}
+<div class="card mb-3 shadow-sm">
+    <div class="card-body">
+        <h2 class="h6">Order #{{ order.id }} · {{ order.created_at|date:"M d, Y" }}</h2>
+        <ul>
+        {% for item in order.items.all %}
+            <li>{{ item.product_name }} x {{ item.quantity }} — ${{ item.subtotal }}</li>
+        {% endfor %}
+        </ul>
+        <p class="fw-bold mb-0">Total: ${{ order.total }}</p>
+    </div>
+</div>
+{% empty %}
+<p class="text-muted">No orders yet.</p>
+{% endfor %}
+{% endblock %}

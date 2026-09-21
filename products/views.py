@@ -2,12 +2,13 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .models import Products
-from vendors.models import VendorStore
 
 
 @login_required
-def add_product(request, store_id):
-    store = VendorStore.objects.get(id=store_id)
+def add_product(request):
+    if request.user.role != 'vendor':
+        messages.error(request, 'Only vendors can add products.')
+        return redirect('home')
 
     if request.method == 'POST':
         name = request.POST.get('name', '').strip()
@@ -34,7 +35,6 @@ def add_product(request, store_id):
             for e in errors:
                 messages.error(request, e)
             return render(request, 'products/products.html', {
-                'store': store,
                 'name': name,
                 'description': description,
                 'price': request.POST.get('price', ''),
@@ -44,14 +44,14 @@ def add_product(request, store_id):
             name=name,
             description=description,
             price=price,
-            store=store,
+            vendor=request.user,
         )
         if image:
             product.image = image
         product.save()
         return redirect('products:product-details', product_id=product.id)
 
-    return render(request, 'products/products.html', {'store': store})
+    return render(request, 'products/products.html')
 
 
 @login_required

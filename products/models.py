@@ -1,12 +1,13 @@
 from django.db import models
-from vendors.models import VendorStore
+from django.conf import settings
 
-# Create your models here.
+
 class Products(models.Model):
-    name=models.CharField(max_length=255)
-    price=models.PositiveIntegerField()
-    description=models.TextField()
-    store=models.ForeignKey(VendorStore,on_delete=models.CASCADE)
-    image = models.ImageField(upload_to='products/', blank=True, null=True)  
+    name = models.CharField(max_length=255)
+    price = models.PositiveIntegerField()
+    description = models.TextField()
+    vendor = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,related_name='products',null=True,blank=True)
+    image = models.ImageField(upload_to='products/', blank=True, null=True)
 
-    REQUIRED_FIELDS=['name','price','description']
+    def __str__(self):
+        return self.name

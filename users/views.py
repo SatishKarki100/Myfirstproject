@@ -15,6 +15,7 @@ def register_view(request):
         email = request.POST.get('email', '').strip()
         password = request.POST.get('password', '')
         password2 = request.POST.get('password2', '')
+        role = request.POST.get('role', 'user')
 
         errors = []
         if not username:
@@ -29,6 +30,8 @@ def register_view(request):
             errors.append('Password is required.')
         if password != password2:
             errors.append('Passwords do not match.')
+        if role not in ['user', 'vendor']:
+            errors.append('Invalid role.')
         if username and User.objects.filter(username=username).exists():
             errors.append('Username already taken.')
         if email and User.objects.filter(email=email).exists():
@@ -43,6 +46,7 @@ def register_view(request):
                 'middlename': middlename,
                 'last_name': last_name,
                 'email': email,
+                'role': role,
             })
 
         user = User.objects.create_user(
@@ -52,6 +56,7 @@ def register_view(request):
             first_name=first_name,
             last_name=last_name,
             middlename=middlename or None,
+            role=role,
         )
         login(request, user)
         return redirect('profile')
@@ -63,12 +68,10 @@ def login_view(request):
     if request.method == 'POST':
         username = request.POST.get('username', '').strip()
         password = request.POST.get('password', '')
-
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
             return redirect('profile')
-
         messages.error(request, 'Invalid username or password.')
         return render(request, 'users/login.html', {'username': username})
 

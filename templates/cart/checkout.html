@@ -1,0 +1,25 @@
+{% extends 'main/base.html' %}
+{% block title %}Checkout{% endblock %}
+{% block content %}
+<div class="card shadow-sm">
+<div class="card-body p-4">
+    <h1 class="h4 mb-3">Confirm order</h1>
+    <ul class="list-group mb-3">
+    {% for item in cart.items.all %}
+        <li class="list-group-item d-flex justify-content-between">
+            <span>{{ item.product.name }} x {{ item.quantity }}</span>
+            <span>${{ item.subtotal }}</span>
+        </li>
+    {% endfor %}
+        <li class="list-group-item d-flex justify-content-between fw-bold">
+            <span>Total</span><span>${{ cart.total }}</span>
+        </li>
+    </ul>
+    <form method="POST">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-success">Place order</button>
+        <a href="{% url 'cart' %}" class="btn btn-outline-secondary">Back</a>
+    </form>
+</div>
+</div>
+{% endblock %}

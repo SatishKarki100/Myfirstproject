@@ -1,6 +1,7 @@
 from django.contrib.auth.models import AbstractUser, BaseUserManager, PermissionsMixin
 from django.db import models
 
+
 class UserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
         if not email:
@@ -16,10 +17,12 @@ class UserManager(BaseUserManager):
         extra_fields.setdefault('is_superuser', True)
         return self.create_user(email, password, **extra_fields)
 
+
 class User(AbstractUser):
-    middlename = models.CharField(max_length=255,null=True,blank=True)
+    middlename = models.CharField(max_length=255, null=True, blank=True)
+    role = models.CharField(max_length=20,choices=[('user', 'User'), ('vendor', 'Vendor')],default='user')
 
     objects = UserManager()
 
-    USERNAME_FIELD = 'username'  
-    REQUIRED_FIELDS = ['email','first_name', 'last_name']  
+    USERNAME_FIELD = 'username'
+    REQUIRED_FIELDS = ['email', 'first_name', 'last_name']

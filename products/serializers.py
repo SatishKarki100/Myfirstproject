@@ -3,16 +3,16 @@ from .models import Products
 
 
 class ProductsSerializer(serializers.ModelSerializer):
-    store_name = serializers.CharField(source='store.store_name', read_only=True)
+    vendor_name = serializers.CharField(source='vendor.username', read_only=True)
     image_url = serializers.SerializerMethodField()
 
     class Meta:
         model = Products
         fields = [
             'id', 'name', 'price', 'description',
-            'store', 'store_name', 'image', 'image_url',
+            'vendor', 'vendor_name', 'image', 'image_url',
         ]
-        read_only_fields = ['id']
+        read_only_fields = ['id', 'vendor']
 
     def get_image_url(self, obj):
         request = self.context.get('request')
